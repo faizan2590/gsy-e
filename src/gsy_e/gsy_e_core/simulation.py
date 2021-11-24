@@ -99,6 +99,7 @@ class Simulation:
 
         self.setup_module_name = setup_module_name
         self.is_stopped = False
+        self._iterative_slots = False
 
         self.live_events = LiveEvents(self.simulation_config)
         self.kafka_connection = kafka_connection_factory()
@@ -393,6 +394,9 @@ class Simulation:
                 log.info("Received stop command.")
                 sleep(5)
                 break
+
+            if self._iterative_slots:
+                self.paused = True
 
         self.sim_status = "finished"
         self.deactivate_areas(self.area)
