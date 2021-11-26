@@ -134,6 +134,8 @@ def run(setup_module_name, settings_file, duration, slot_length, tick_length,
                 external_connection_enabled=enable_external_connection,
                 enable_degrees_of_freedom=enable_dof)
 
+        if iterative:
+            kwargs["iterative"] = iterative
         if compare_alt_pricing is True:
             ConstSettings.MASettings.AlternativePricing.COMPARE_PRICING_SCHEMES = True
             # we need the seconds in the export dir name
@@ -154,8 +156,6 @@ def run(setup_module_name, settings_file, duration, slot_length, tick_length,
         else:
             if pause_at is not None:
                 kwargs["pause_after"] = convert_str_to_pause_after_interval(start_date, pause_at)
-            if iterative:
-                kwargs["iterative"] = iterative
             run_simulation(setup_module_name, simulation_config, None, None, None,
                            slot_length_realtime, kwargs)
 
