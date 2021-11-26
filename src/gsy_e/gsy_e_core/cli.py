@@ -86,6 +86,8 @@ _setup_modules = available_simulation_scenarios
 @click.option("--pause-at", type=str, default=None,
               help="Automatically pause at a certain time. "
               f"Accepted Input formats: ({DATE_FORMAT}, {TIME_FORMAT}) [default: disabled]")
+@click.option("--iterative", is_flag=True, default=False, show_default=True,
+              help="Pause the simulation at the end of each time slot.")
 @click.option("--repl/--no-repl", default=False, show_default=True,
               help="Start REPL after simulation run.")
 @click.option("--no-export", is_flag=True, default=False, help="Skip export of simulation data")
@@ -106,7 +108,7 @@ _setup_modules = available_simulation_scenarios
                 "(orders can't contain attributes/requirements)."))
 def run(setup_module_name, settings_file, duration, slot_length, tick_length,
         cloud_coverage, compare_alt_pricing, enable_external_connection, start_date,
-        pause_at, slot_length_realtime, enable_dof: bool, **kwargs):
+        pause_at, iterative: bool, slot_length_realtime, enable_dof: bool, **kwargs):
     """Configure settings and run a simulation."""
     # Force the multiprocessing start method to be 'fork' on macOS.
     if platform.system() == "Darwin":
@@ -152,6 +154,8 @@ def run(setup_module_name, settings_file, duration, slot_length, tick_length,
         else:
             if pause_at is not None:
                 kwargs["pause_after"] = convert_str_to_pause_after_interval(start_date, pause_at)
+            if iterative:
+                kwargs["iterative"] = iterative
             run_simulation(setup_module_name, simulation_config, None, None, None,
                            slot_length_realtime, kwargs)
 
